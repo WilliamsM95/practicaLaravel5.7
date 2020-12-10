@@ -9,6 +9,7 @@
   <body>
 
     <div class="container">
+        <a href="{{route('inicio')}}" class="btn btn-primary">Inicio</a>
         <a href="{{route('foto')}}" class="btn btn-primary">Fotos</a>
         <a href="{{route('noticia')}}" class="btn btn-primary">Blog</a>
         <a href="{{route('nosotros')}}" class="btn btn-primary">Nosotros</a>

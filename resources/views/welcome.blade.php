@@ -1,37 +1,70 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-    <title>Hello, world!</title>
-  </head>
-  <body>
-    <div class="container my-4">
+@extends('plantilla')
+
+@section('seccion')
         <h1 class="display-4">Notas</h1>
+
+        @if ( session('mensaje') )
+            <div class="alert alert-success">
+                {{ session('mensaje') }}
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        @endif
+
+        <form method="POST" action="{{ route('notas.crear') }}">
+            @csrf
+
+            <input type="text" name="nombre" class="form-control mb-2" placeholder="Nombre" id="" value="{{ old('nombre') }}">
+                @if($errors->has('nombre') )
+                    <div class="alert alert-danger">
+                        Ingresa un valor en el nombre
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+            <input type="text" name="descripcion" class="form-control mb-2" placeholder="Descripcion" id="" value="{{ old('descripcion') }}">
+                @if($errors->has('descripcion') )
+                    <div class=" form-control alert alert-danger">
+                        Ingresa un valor en la descripcion
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+            <button class="btn btn-primary btn-block" type="submit">Agregar</button>
+          </form>
+
         <table class="table">
             <thead>
-              <tr>
+            <tr>
                 <th scope="col">#id</th>
                 <th scope="col">Nombre</th>
                 <th scope="col">Descripcion</th>
-                <th scope="col">Handle</th>
-              </tr>
+                <th scope="col">Acciones</th>
+            </tr>
             </thead>
             <tbody>
                 @foreach ($notas as $nota)
-                  <tr>
+                <tr>
                     <th scope="row">{{$nota->id}}</th>
-                    <td>{{$nota->nombre}}</td>
+                    <td>
+                        <a href="{{route('notas.detalle', $nota)}}">
+                            {{$nota->nombre}}
+                        </a>
+                    </td>
                     <td>{{$nota->descripcion}}</td>
-                    <td>@mdo</td>
-                  </tr>
+                    <td>
+                        <a href="{{route('notas.editar', $nota)}}" class="btn btn-warning btn-sm">Editar</a>
+                        <form action="{{ route('notas.eliminar', $nota) }}" class="d-inline" method="POST">
+                            @method('DELETE')
+                            @csrf
+                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        </form>
+                    </td>
+                </tr>
                 @endforeach()
             </tbody>
-          </table>
-    </div>
-
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-  </body>
-</html>
+        </table>
+@endsection
